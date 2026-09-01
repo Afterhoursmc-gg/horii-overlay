@@ -4,5 +4,24 @@ version='0.1.0'; group='dev.horii.overlay'
 sourceCompatibility=JavaVersion.VERSION_1_8; targetCompatibility=JavaVersion.VERSION_1_8
  minecraft { version='1.8.9-11.15.1.2318-1.8.9'; runDir='run'; mappings='stable_22' }
 repositories { mavenCentral() }
-dependencies { compile 'org.java-websocket:Java-WebSocket:1.5.6' }
+configurations { embedded }
+dependencies {
+ compile 'org.java-websocket:Java-WebSocket:1.5.6'
+ embedded 'org.java-websocket:Java-WebSocket:1.5.6'
+}
+jar {
+ exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
+}
+reobfJar.doLast {
+ def outputJar = file("${buildDir}/libs/${project.name}-${version}.jar")
+ configurations.embedded.each { dependency ->
+  ant.zip(destfile: outputJar, update: true) {
+   zipfileset(src: dependency) {
+    exclude(name: 'META-INF/*.SF')
+    exclude(name: 'META-INF/*.DSA')
+    exclude(name: 'META-INF/*.RSA')
+   }
+  }
+ }
+}
 processResources { inputs.property 'version', project.version; filesMatching('mcmod.info'){ expand 'version':project.version } }
