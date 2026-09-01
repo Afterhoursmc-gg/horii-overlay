@@ -6,4 +6,7 @@ dist
 .next
 coverage
 *.log
+*.tsbuildinfo
+.gradle/
+minecraft/mod/.gradle/
 minecraft/mod/build/
