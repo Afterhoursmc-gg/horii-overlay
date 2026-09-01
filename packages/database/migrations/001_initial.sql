@@ -1,0 +1,10 @@
+create extension if not exists pgcrypto;
+create table if not exists users (id uuid primary key default gen_random_uuid(), discord_id text unique, rank text not null default 'FREE', created_at timestamptz not null default now(), last_login timestamptz);
+create table if not exists minecraft_accounts (id uuid primary key default gen_random_uuid(), user_id uuid not null references users(id) on delete cascade, uuid text not null unique, username text not null, linked_at timestamptz not null default now());
+create table if not exists tags (id uuid primary key default gen_random_uuid(), slug text not null unique, label text not null, color text not null, priority integer not null default 0);
+create table if not exists user_tags (user_id uuid not null references users(id) on delete cascade, tag_id uuid not null references tags(id) on delete cascade, created_at timestamptz not null default now(), primary key(user_id,tag_id));
+create table if not exists subscriptions (id uuid primary key default gen_random_uuid(), user_id uuid not null references users(id) on delete cascade, plan text not null, status text not null, current_period_end timestamptz);
+create table if not exists games (id uuid primary key default gen_random_uuid(), external_id text not null unique, mode text not null, status text not null, started_at timestamptz, ended_at timestamptz);
+create table if not exists game_players (game_id uuid not null references games(id) on delete cascade, minecraft_uuid text not null, username text not null, fkdr numeric, wlr numeric, wins integer, level integer, final_kills integer, beds_broken integer, primary key(game_id,minecraft_uuid));
+create table if not exists sessions (id uuid primary key default gen_random_uuid(), user_id uuid references users(id) on delete cascade, token_hash text not null unique, expires_at timestamptz not null);
+create table if not exists admin_logs (id uuid primary key default gen_random_uuid(), actor_user_id uuid references users(id), action text not null, target_user_id uuid references users(id), metadata jsonb not null default '{}', created_at timestamptz not null default now());
