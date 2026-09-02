@@ -37,9 +37,9 @@ public final class HoriiOverlayMod {
         Runtime.getRuntime().exec(new String[]{"rundll32", "url.dll,FileProtocolHandler", WEB_URL}); opened=true;
       }
       if(!opened) Runtime.getRuntime().exec(new String[]{"xdg-open", WEB_URL});
-      mc().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("[Horii Overlay] Opnar " + WEB_URL));
+      mc().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("[Horii Overlay] Opening " + WEB_URL));
     } catch(Exception error){
-      mc().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("[Horii Overlay] Klarte ikkje opne nettlesaren: " + error.getClass().getSimpleName()));
+      mc().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("[Horii Overlay] Could not open browser: " + error.getClass().getSimpleName()));
     }
   }
   public static Minecraft mc(){ return Minecraft.getMinecraft(); }
